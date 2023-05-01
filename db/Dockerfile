@@ -20,16 +20,16 @@ RUN Invoke-WebRequest -Uri $env:sql_express_download_url -OutFile sqlexpress.exe
 
 COPY . /
 
-RUN start-service MSSQL`$SQLEXPRESS
-
-# Create blog application database and tables
-RUN powershell sqlcmd -S localhost,1433 -i Setup-blogdatabase.sql
-RUN powershell sqlcmd -S localhost,1433 -i Setup-blogtables.sql
-
 RUN stop-service MSSQL`$SQLEXPRESS ; \
         set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpdynamicports -value '' ; \
         set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\supersocketnetlib\tcp\ipall' -name tcpport -value 1433 ; \
         set-itemproperty -path 'HKLM:\software\microsoft\microsoft sql server\mssql14.SQLEXPRESS\mssqlserver\' -name LoginMode -value 2 ;
+
+RUN .\startq -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose
+
+# Create blog application database and tables
+RUN powershell sqlcmd -S localhost,1433 -i Setup-blogdatabase.sql 
+RUN powershell sqlcmd -S localhost,1433 -i Setup-blogtables.sql
 
 
 CMD .\start -sa_password $env:sa_password -ACCEPT_EULA $env:ACCEPT_EULA -attach_dbs \"$env:attach_dbs\" -Verbose

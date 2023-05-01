@@ -9,7 +9,7 @@ RUN powershell add-windowsfeature web-asp-net45
 RUN powershell -Command \
     $ErrorActionPreference = 'Stop'; \
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
-	Invoke-WebRequest -Method Get -Uri https://github.com/rxtur/BlogEngine.NET/releases/download/v3.3.6.0/3360.zip -OutFile c:\BlogEngineNETSrc.zip ; \
+	Invoke-WebRequest -Method Get -Uri https://github.com/rxtur/BlogEngine.NET/releases/download/v3.3.8.0/3380.zip -OutFile c:\BlogEngineNETSrc.zip ; \
 	Expand-Archive -Path c:\BlogEngineNETSrc.zip -DestinationPath c:\inetpub\wwwroot\blogengine ; \
 	Remove-Item c:\BlogEngineNETSrc.zip -Force
 
